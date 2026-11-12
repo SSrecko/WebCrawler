@@ -58,7 +58,7 @@ def crawler(queued_url, search_title, queue, discovered, final, domain, max_dept
     
     soup, url = content
     
-    if search_title in soup.text:
+    if search_title.casefold() in soup.text.casefold():
         final.add(url)
         
     for link in soup.find_all("a", href=True):
@@ -96,7 +96,7 @@ domain = urlsplit(search_url).hostname
 
 while queue:
     crawler(queue.popleft(), search_title, queue, discovered, final, domain, max_depth)
-    sleep(1)
+    sleep(0.1)
     
     
 print("Links found: ")
