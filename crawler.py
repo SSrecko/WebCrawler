@@ -5,6 +5,7 @@ from collections import deque
 from time import sleep
 from urllib.parse import urljoin, urldefrag, urlsplit
 
+from datetime import datetime
 
 def get_content(search_url, valid_domain):
     
@@ -87,6 +88,10 @@ def crawler(queued_url, search_title, queue, discovered, final, domain, max_dept
 search_url = input("Home Page: ").strip()
 search_title = input("Search for: ").strip()
 max_depth = int(input("Max depth: ").strip())
+sleep_timer = float(input("Time between requests: ").strip())
+export_file_name = input("Export file name (no extension): ").strip()
+
+start_time = datetime.now()
 
 
 discovered = {search_url}
@@ -96,10 +101,16 @@ domain = urlsplit(search_url).hostname
 
 while queue:
     crawler(queue.popleft(), search_title, queue, discovered, final, domain, max_depth)
-    sleep(0.1)
+    sleep(sleep_timer)
     
-    
-print("Links found: ")
 
-for link in final:
-    print(link, "\n")
+with open(export_file_name + ".txt", "w", encoding="utf-8") as file:
+        
+    for link in final:
+        file.write(link + "\n")
+
+end_time = datetime.now()
+
+print("Statistics: \n")
+print("Links visited: ", len(discovered), "\n")
+print("Searched for: ", str(end_time - start_time).split(".")[0])
